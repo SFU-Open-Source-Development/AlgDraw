@@ -3,16 +3,18 @@ import pygame
 import pygame_gui
 import random
 
+# constant variables
+ARRAY_LENGTH = 200
+MAX_BAR_HEIGHT = ARRAY_LENGTH
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+BOUNDARY = SCREEN_WIDTH / ARRAY_LENGTH
 
-pygame.init()
-pygame.font.init()  # initialize font in order to use fonts
 
-pygame.display.set_caption('Algorthm Visualizer')  # set caption
-
-window_surface = pygame.display.set_mode((800, 600))  # set size
-
-# initialize ariel font
-arielFont = pygame.font.SysFont("Ariel", 30)
+# initiate size of array bars
+array = [0]*ARRAY_LENGTH
+# initiate array size to hold the array bar colors
+arrayColor = [0]*ARRAY_LENGTH
 
 # color dictionary for r,g,b in tuple
 colors = {
@@ -23,18 +25,21 @@ colors = {
     "black": (0, 0, 0)
 }
 
-background = pygame.Surface((800, 600))
+
+pygame.init()
+pygame.font.init()  # initialize font in order to use fonts
+
+pygame.display.set_caption('Algorthm Visualizer')  # set caption
+
+window_surface = pygame.display.set_mode(
+    (SCREEN_WIDTH, SCREEN_HEIGHT))  # set size
+
+# initialize ariel font
+arielFont = pygame.font.SysFont("Ariel", 30)
+
+
+background = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
 background.fill(colors["blue"])
-
-
-# constant variables
-ARRAY_LENGTH = 150
-MAX_BAR_HEIGHT = 100
-
-# initiate array bars
-array = [0]*ARRAY_LENGTH
-# arrya to hold bar color
-arrayColor = [0]*ARRAY_LENGTH
 
 
 def generateArray():
@@ -57,8 +62,10 @@ def draw():
             # parameters: screen object, line color, starting position, ending position, width
             window_surface,
             colors["green"],
-            (5 * i-3, MAX_BAR_HEIGHT),
-            (5 * i-3, array[i]*2 + MAX_BAR_HEIGHT),
+            (BOUNDARY * i-3, MAX_BAR_HEIGHT),
+            (BOUNDARY * i-3, array[i] * 2 + MAX_BAR_HEIGHT),
+            # (5 * i-3, MAX_BAR_HEIGHT),
+            # (5 * i-3, array[i]*2 + MAX_BAR_HEIGHT),
             3
         )
 
@@ -112,8 +119,9 @@ while is_running:
                 generateArray()
                 selection_sort(array)
                 pygame.display.update()  # redundant?
-    draw()
+
     # initializes pygame's screen
+    draw()
     pygame.display.update()
 
     # window_surface.blit(background, (0, 0)) # redundant?
