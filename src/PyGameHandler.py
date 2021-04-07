@@ -5,19 +5,22 @@ import random
 
 
 pygame.init()
+pygame.font.init()  # initialize font in order to use fonts
 
-pygame.display.set_caption('Algorthm Visualizer')
+pygame.display.set_caption('Algorthm Visualizer')  # set caption
 
-# Size
-window_surface = pygame.display.set_mode((800, 600))
+window_surface = pygame.display.set_mode((800, 600))  # set size
 
+# initialize ariel font
+arielFont = pygame.font.SysFont("Ariel", 30)
 
 # color dictionary for r,g,b in tuple
 colors = {
     "green": (0, 204, 102),
     "grey": (224, 224, 224),
     "blue": (66, 135, 245),
-    "white": (255, 255, 255)
+    "white": (255, 255, 255),
+    "black": (0, 0, 0)
 }
 
 background = pygame.Surface((800, 600))
@@ -42,10 +45,16 @@ def generateArray():
 
 
 def draw():
-    # Draw the array values as lines
+
+    # render text
+    # parameters: (text, antialias, color, background=None)
+    text = arielFont.render("Press SPACE BAR to sort.", True, colors["black"])
+    window_surface.blit(text, (100, 0))
+
+    # Draw the array values as bars
     for i in range(1, MAX_BAR_HEIGHT):
         pygame.draw.line(
-            # PARAMETERS: screen object, line color, starting position, ending position, width
+            # parameters: screen object, line color, starting position, ending position, width
             window_surface,
             colors["green"],
             (5 * i-3, MAX_BAR_HEIGHT),
@@ -65,10 +74,10 @@ def draw():
 
 
 def updateScreenWhenSorting():
-    window_surface.fill(colors["white"])
-    draw()
-    pygame.display.update()
-    pygame.time.delay(20)
+    window_surface.fill(colors["white"])    # clear all bars
+    draw()                                  # redraw all the bars
+    pygame.display.update()                 # refresh the screen
+    pygame.time.delay(30)                   # wait time for screen refresh
 
 
 def selection_sort(arr):
@@ -80,7 +89,7 @@ def selection_sort(arr):
             if arr[j] < arr[min_index]:
                 min_index = j
         arr[i], arr[min_index] = arr[min_index], arr[i]
-        updateScreenWhenSorting()
+        updateScreenWhenSorting()           # update the visuals
 
 
 is_running = True
