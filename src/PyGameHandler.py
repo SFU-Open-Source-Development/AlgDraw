@@ -3,6 +3,7 @@ import pygame
 import pygame_gui
 import random
 
+
 pygame.init()
 
 pygame.display.set_caption('Algorthm Visualizer')
@@ -63,15 +64,26 @@ def draw():
     #     )
 
 
-def fill():
+def updateScreenWhenSorting():
+    window_surface.fill(colors["white"])
     draw()
     pygame.display.update()
+    pygame.time.delay(20)
 
 
-# game loop
+def selection_sort(arr):
+    # Selection sort for testing
+
+    for i in range(len(arr)-1):
+        min_index = i
+        for j in range(i+1, len(arr)):
+            if arr[j] < arr[min_index]:
+                min_index = j
+        arr[i], arr[min_index] = arr[min_index], arr[i]
+        updateScreenWhenSorting()
+
+
 is_running = True
-
-# generate rnadom array
 generateArray()
 
 while is_running:
@@ -87,14 +99,12 @@ while is_running:
         # handles return key
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                print("key pressed.")
-                draw()
-                pygame.display.update()
-                # fill()
+                print("Space key pressed.")
+                generateArray()
+                selection_sort(array)
+                pygame.display.update()  # redundant?
     draw()
-    # fill the screen with random bars
-    # fill()
-
-    # window_surface.blit(background, (0, 0))
-
+    # initializes pygame's screen
     pygame.display.update()
+
+    # window_surface.blit(background, (0, 0)) # redundant?
