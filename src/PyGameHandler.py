@@ -3,6 +3,8 @@ import pygame
 import pygame_gui
 import random
 
+# testing
+
 # constant variables
 ARRAY_LENGTH = 200
 MAX_BAR_HEIGHT = ARRAY_LENGTH
