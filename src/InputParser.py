@@ -2,57 +2,54 @@ import pandas as pd
 import numpy as np
 from tkinter import filedialog
 from tkinter import *
+# import pygame
+import pygame_textinput
 
-# prompt user for text file
+
 def input_prompt():
+    '''prompts user for file using tkinter, returns path to file'''
     window = Tk()
     window.withdraw()
-    prompt_file = filedialog.askopenfilename(title="Select files",
-            filetypes=(("Text Files", ".txt .csv"), ("All Files", "*.*")))
+    prompt_file = filedialog.askopenfilename(title="Select an excel or text file",
+            filetypes=[("Text Files", ("*.txt", "*.csv")), ("Excel", ("*.xls","*xlsx"))])
     window.destroy()
     return prompt_file
 
-'''
-# validates file name input
-def input_valid():
+
+def input_valid(file_input, col_list, font, screen):
+    '''validates user input and returns array for sorting'''
     ans_valid = False
     while not ans_valid:
-        file_input = input("Type file name (include .csv or .txt): ")
-        if ".csv" not in file_input and ".txt" not in file_input:
-            print("You forgot to include .csv or .txt, try again")
-            ans_valid = False
-        else:
+        if file_input.endswith(".csv") or file_input.endswith(".txt"):
+            array = read_textfile(file_input, col_list)
             ans_valid = True
-    return file_input
-'''
-# take in user inputs
-def parse_input(text_input):
-    # possible for user to input column name
-    # but needs if-statement to verify if user wants to input numbers or names
-    col_input = text_input
-    col_list = col_input.split(",")
-    for i in range(len(col_list)):
-        col_list[i] = int(col_list[i])
-    return col_list
+        elif file_input.endswith(".xlsx") or file_input.endswith(".xls"):
+            array = read_excelfile(file_input, col_list)
+        else:
+            error_text = font.render('You are missing .csv, .txt, .xls, .xlsx',
+                                     False, (0, 0, 0))  # error message
+            screen.blit(error_text, (0, 0))
+            ans_valid = False
+    return array
+
 
 def read_textfile(filename, col_list):
+    '''reads a text file and parses the input according to chosen columns'''
+    array = []
     f = pd.read_csv(filename, encoding='utf-8', usecols=col_list)
     # https://www.kite.com/python/docs/pandas.DataFrame.replace
     # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.dropna.html
     f.replace(r'^\s*$', np.nan, inplace=True)
-    for i in col_list:
-        col_list.append(float(i))  # convert each object in columns to float
-    return col_list  # col_list are the list of numbers to be sorted
+    array.append(f.astype(float))  # converts all objects in dataframe into float
+    return array
 
-'''
-def read_excelfile(filename, file_delim, col_list):
-    f = pd.read_excel(filename, encoding='utf-8',
-                          sep=file_delim, usecols=col_list)
+def read_excelfile(filename, col_list):
+    '''reads an excel file and parses the input according to chosen columns'''
+    array = []
+    f = pd.read_excel(filename, encoding='utf-8', usecols=col_list)
     f.replace(r'^\s*$', np.nan, inplace=True)
-    for i in col_list:
-        col_list.append(float(i))  # convert each object in columns to float
-    return col_list
-'''
+    array.append(f.astype(float))
+    return array
+
 
 if __name__ == "__main__":
-    filename = input_prompt()
